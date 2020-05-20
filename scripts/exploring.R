@@ -1,11 +1,9 @@
 library(tidyverse)
-#library(reshape)
 
 humidity <- read.csv("./data/raw.csv")
   View(humidity)
 
-### Exploring and cleaning the data before treating it ###
-# Note that the data we're interested in is the humidity %
+### Exploring the data before treating it ###
 
 head(humidity)
   summary(humidity) # There are a few "NA" values in the months variables
@@ -14,7 +12,7 @@ class(humidity$Jan)
   str(humidity)
 
 ## Are there any "NA" values?
-mean(humidity$Jan)  # Observe  that it returns "NA" for all months. Probably a wrong observation that'd be worth excluding
+mean(humidity$Jan)  # Returns "NA" for all months. Probably a wrong/unexistent observation that'd be worth deleting
 mean(humidity$Mar)
 
 summary(humidity$Jan)
@@ -43,8 +41,15 @@ hum_boxplot <- boxplot(humidity[month])   # All of the months seem to have an ou
 summary(humidity$Jan)
 summary(humidity$Feb)
 summary(humidity$Mar)
-summary(humidity[month])    #  Note that some observations still have outliers -9999.9 which seem to be an error (no negative humidity) 
+summary(humidity[month])    #  Note that some observations still have outliers -9999.9 which seem to be a reporting error (no negative humidity) 
                             #  Because it's irrelevant, let's drop it
+
+## Is the data uniformly reported?
+
+humidity$Statistic.Description <- as.factor(humidity$Statistic.Description)
+levels(humidity$Statistic.Description)   # No, it's not
+
+humidity$Statistic.Description <- as.character(humidity$Statistic.Description)
 
 # Identifying the observations + creating a working table
 
@@ -79,10 +84,6 @@ wrk_humidity$Country.or.Territory <- as.factor(wrk_humidity$Country.or.Territory
 
 summary(wrk_humidity)
 
-## Is the data uniformly reported?
-
-sort(humidity$Country.or.Territory)   # No, it's not. For US cities, use "Mean of 3-Hourly Observations".
-
 
 ### Manipulating the data you want ### 
 
@@ -112,15 +113,12 @@ selected_humidity$Period[!same_period]
 selected_humidity$Station.Name[!same_period]     # Houston is the only city which has an observation period different from 1961-1990
 
 ##########################
+# All work below is unfinished
 
 ## Create a plottable data frame
 # Data wrangling needed 
-# All work below is unfinished
 
-#test0 <- selected_humidity %>%  select(Station.Name, all_of(month))
-#test <- reshape(test0,times=names(test0)[-1],timevar="Month",varying=names(test0)[-1],v.names="Humidity %",direction="long")
-#test$Month  <- as.factor(test$Month)
-
+## Visualization
 # library(ggthemes)
 # library(ggrepel)
 # object <- test %>% ggplot(aes(Month, `Humidity %`, label = Station.Name)) #define the global

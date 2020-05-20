@@ -19,7 +19,7 @@ keep_var <- c("Country.or.Territory", "Station.Name", "Period", "Statistic.Descr
 
 wrk_humidity <- humidity %>% select(all_of(keep_var)) %>% filter_at(vars(month), all_vars(. >= 0))
 wrk_humidity$Country.or.Territory <- as.factor(wrk_humidity$Country.or.Territory)
-new_hum_boxplot <- boxplot(wrk_humidity[month]) # Data is already good to go
+new_hum_boxplot <- boxplot(wrk_humidity[month]) # Data is good to go
 
 
 selected_humidity <- wrk_humidity %>% filter(wrk_humidity$Station.Name %in% c("Brasilia", 
